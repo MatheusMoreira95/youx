@@ -1,6 +1,7 @@
 package com.example.Youx.services;
 
 import com.example.Youx.data.vo.PacientesVo;
+import com.example.Youx.data.vo.security.CriptografiaCPF;
 import com.example.Youx.entities.Pacientes;
 import com.example.Youx.mapper.DozerMapper;
 import com.example.Youx.repositories.PacientesRepository;
@@ -19,6 +20,9 @@ public class PacientesService {
     @Autowired
     private final PacientesRepository repository;
 
+    CriptografiaCPF criptografiaCPF = new CriptografiaCPF();
+
+
     public PacientesService(PacientesRepository repository) {
 
         this.repository = repository;
@@ -30,16 +34,19 @@ public class PacientesService {
     }
 
     public PacientesVo findById(String cpf) {
-        var obj = repository.findById(cpf).orElseThrow(() -> new ResourceNotFoundException(cpf));
+        String cpfcriptografado = criptografiaCPF.criptografar(cpf);
+        var obj = repository.findById(cpfcriptografado).orElseThrow(() -> new ResourceNotFoundException(cpfcriptografado));
+        obj.setCpf(criptografiaCPF.descriptografar(obj.getCpf()));
         return DozerMapper.parseObject(obj, PacientesVo.class);
     }
 
     //metodo recebe um Vo como parametro
     public PacientesVo insert(PacientesVo pacientes) throws ValidationException {
         //verifica se o CPF já está cadastrado
-        if (verificarCpf(pacientes.getCpf())) {
+        if (verificarCpf(criptografiaCPF.criptografar(pacientes.getCpf()))) {
             //converte PacientesVo em Pacientes para salvar no banco
             var obj = DozerMapper.parseObject(pacientes, Pacientes.class);
+            obj.setCpf(criptografiaCPF.criptografar(obj.getCpf()));
             //Converte Pacientes para PacientesVo para retornar na chamada da função
             var vo = DozerMapper.parseObject(repository.save(obj), PacientesVo.class);
             return vo;
@@ -60,4 +67,6 @@ public class PacientesService {
         }
         return valid;
     }
+
+
 }

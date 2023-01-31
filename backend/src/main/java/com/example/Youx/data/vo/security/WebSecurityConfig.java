@@ -4,6 +4,7 @@ package com.example.Youx.data.vo.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,7 +15,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebSecurity
 @Configuration
-// @EnableGlobalMethodSecurity vai ser descontinuada em breve , então mais viavel requestMatchers
+@EnableMethodSecurity
+// @EnableGlobalMethodSecurity vai ser descontinuada em breve , opção requestMatchers é viavel
+//@EnableMethodSecurity também é uma opção viavel
 public class WebSecurityConfig implements WebMvcConfigurer {
 
 
@@ -22,15 +25,16 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        http.httpBasic().and().authorizeHttpRequests()
-                //usar hasAuthority e hasAnyAuthority , pois hasRole está descontinuada junto com antMatchers
-                //requestMatchers substitui o antMatchers
-                .requestMatchers(HttpMethod.GET, "/pacientes").hasAnyAuthority("PERMISSAO_ADM", "PERMISSAO_USER")
+/*
+                usar hasAuthority e hasAnyAuthority , pois hasRole está descontinuada junto com antMatchers
+                requestMatchers substitui o antMatchers
+                Exemplo usando  requestMatchers
+                 http.httpBasic().and().authorizeHttpRequests()
+               .requestMatchers(HttpMethod.GET, "/pacientes").hasAnyAuthority("PERMISSAO_ADM", "PERMISSAO_USER")
                 .requestMatchers(HttpMethod.GET, "/pacientes/**").hasAnyAuthority("PERMISSAO_ADM", "PERMISSAO_USER")
-                .requestMatchers(HttpMethod.POST, "/pacientes").hasAuthority("PERMISSAO_ADM")
-                .and().csrf().disable();
-
+                *
+                .and().csrf().disable();*/
+        http.httpBasic().and().csrf().disable();
         return http.build();
     }
 

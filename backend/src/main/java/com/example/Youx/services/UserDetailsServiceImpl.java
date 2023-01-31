@@ -2,7 +2,6 @@ package com.example.Youx.services;
 
 import com.example.Youx.entities.Enfermeiro;
 import com.example.Youx.repositories.EnfermeiroRepository;
-
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,10 +24,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Enfermeiro enfermeiro = userRepository.findByNome(username).orElseThrow(() -> new UsernameNotFoundException(
-                "Usuario não encontrado: " + username));
+        Enfermeiro enfermeiro = userRepository.findByNome(username).orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado: " + username));
 
-        return new User(enfermeiro.getUsername(), enfermeiro.getPassword(), true, true,
-                true, true, enfermeiro.getAuthorities());
+        return new User(enfermeiro.getUsername(), enfermeiro.getPassword(), true, true, true, true, enfermeiro.getAuthorities());
     }
 }

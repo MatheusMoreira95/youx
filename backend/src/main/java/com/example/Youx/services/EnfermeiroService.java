@@ -1,12 +1,10 @@
 package com.example.Youx.services;
 
 import com.example.Youx.data.vo.EnfermeiroVo;
-import com.example.Youx.data.vo.PacientesVo;
+import com.example.Youx.data.vo.security.CriptografiaCPF;
 import com.example.Youx.entities.Enfermeiro;
-import com.example.Youx.entities.Pacientes;
 import com.example.Youx.mapper.DozerMapper;
 import com.example.Youx.repositories.EnfermeiroRepository;
-import com.example.Youx.repositories.PermissoesUsuariosRepository;
 import com.example.Youx.services.exceptions.ResourceNotFoundException;
 import com.example.Youx.services.exceptions.ResourceUnprocessableException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +21,7 @@ public class EnfermeiroService {
     @Autowired
     EnfermeiroRepository repository;
 
+    CriptografiaCPF criptografiaCPF = new CriptografiaCPF();
     @Autowired
     PasswordEncoder encoder;
 
@@ -30,10 +29,11 @@ public class EnfermeiroService {
     //recebe EnfermeiroVo da chamada do metodo
     public EnfermeiroVo insert(EnfermeiroVo enfermeiro) throws ValidationException {
 
-        if (verificarCpf(enfermeiro.getCpf())) {
+        if (verificarCpf(criptografiaCPF.criptografar(enfermeiro.getCpf()))) {
             enfermeiro.setSenha(encoder.encode(enfermeiro.getSenha()));
             //convert EnfermeiroVO em Enfermeiro
             var obj = DozerMapper.parseObject(enfermeiro, Enfermeiro.class);
+            obj.setCpf(criptografiaCPF.criptografar(obj.getCpf()));
             //Salva o objeto Enfermeiro e convert para EnfermeiroVo para retorno do metodo
             var vo = DozerMapper.parseObject(repository.save(obj), EnfermeiroVo.class);
             return vo;
@@ -44,7 +44,9 @@ public class EnfermeiroService {
     }
 
     public EnfermeiroVo findById(String cpf) {
-        var obj = repository.findById(cpf).orElseThrow(() -> new ResourceNotFoundException(cpf));
+        String cpfcriptografado = criptografiaCPF.criptografar(cpf);
+        var obj = repository.findById(cpfcriptografado).orElseThrow(() -> new ResourceNotFoundException(cpfcriptografado));
+        obj.setCpf(criptografiaCPF.descriptografar(obj.getCpf()));
         return DozerMapper.parseObject(obj, EnfermeiroVo.class);
     }
 

@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "Permissoes")
-public class Role implements GrantedAuthority , Serializable {
+public class Role implements GrantedAuthority, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

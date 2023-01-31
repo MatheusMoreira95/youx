@@ -12,7 +12,7 @@ public class CriptografiaCPF {
     }
 
     @Bean
-    public  String descriptografar(String cpf) {
+    public String descriptografar(String cpf) {
         return new String(Base64.getDecoder().decode(cpf.getBytes()));
     }
 }

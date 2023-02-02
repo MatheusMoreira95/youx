@@ -1,6 +1,7 @@
 package com.example.Youx.data.vo;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -8,7 +9,7 @@ public class PacientesVo implements Serializable {
 
     private String cpf;
     private String nome;
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
     private Double peso;
     private Double Altura;
     private String UF;
@@ -17,7 +18,7 @@ public class PacientesVo implements Serializable {
     }
 
 
-    public PacientesVo(String cpf, String nome, Date dataNascimento, Double peso, Double altura, String UF) {
+    public PacientesVo(String cpf, String nome,LocalDate  dataNascimento, Double peso, Double altura, String UF) {
         this.cpf = cpf;
         this.nome = nome;
         this.dataNascimento = dataNascimento;
@@ -42,11 +43,11 @@ public class PacientesVo implements Serializable {
         this.cpf = cpf;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate  getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate  dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 

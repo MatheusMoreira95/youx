@@ -2,10 +2,15 @@ package com.example.Youx.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,8 +20,11 @@ public class Pacientes implements Serializable {
     @Id
     private String cpf;
     private String nome;
-    @JsonFormat(pattern="dd-MM-yyyy")
-    private Date dataNascimento;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate dataNascimento;
     private Double peso;
     private Double Altura;
     private String UF;
@@ -24,7 +32,7 @@ public class Pacientes implements Serializable {
     public Pacientes() {
     }
 
-    public Pacientes(String cpf, String nome, Date dataNascimento, Double peso, Double altura, String UF) {
+    public Pacientes(String cpf, String nome, LocalDate  dataNascimento, Double peso, Double altura, String UF) {
         this.cpf = cpf;
 
         this.nome = nome;
@@ -50,11 +58,11 @@ public class Pacientes implements Serializable {
         this.cpf = cpf;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate  getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 

@@ -13,6 +13,7 @@ import java.util.Objects;
 @Entity
 public class Enfermeiro implements UserDetails {
 
+
     @Id
     private String cpf;
     @Column(unique = true, nullable = false)

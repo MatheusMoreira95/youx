@@ -12,12 +12,13 @@
                 </label>
                 <label>
                     <span>Data de Nascimento:</span>
-                    <input v-model="dataNasc" type="date">
+                    <input v-model="dataNascimento" type="date">
                 </label>
-                <button @click="inserir()">Inserir</button>
-
+                <label>
+                    <button class="inserir" @click="inserir()">Inserir</button>
+                </label>
             </div>
-            <div class="outras">
+            <div class="outros">
                 <label>
                     <span>Peso:</span>
                     <input v-model="peso" type="number" min="0" max="300" step=".01">
@@ -34,16 +35,46 @@
                         </option>
                     </select>
                 </label>
-                <button @click="limpar()">Limpar</button>
+                <label>
+                    <button class="limpar" @click="limpar()">Limpar</button>
+                </label>
             </div>
+            <div class="tabela">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NOME</th>
+                            <th>CPF</th>
+                            <th>DATA NASCIMENTO</th>
+                            <th>PESO</th>
+                            <th>ALTURA</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="paciente of pacientes" :key="paciente.cpf">
+                            <td>{{ paciente.nome }}</td>
+                            <td>{{ paciente.cpf }}</td>
+                            <td>{{ paciente.dataNascimento }}</td>
+                            <td>{{ paciente.peso }}</td>
+                            <td>{{ paciente.altura }}</td>
+                            <td>{{ paciente.uf }}</td>
+                        </tr>
+                    </tbody>
 
+
+                </table>
+            </div>
         </form>
+
+
     </div>
+
 </template>
 
 <script>
 import Estados from "@/services/estados";
-import pacientes from '@/services/listarPacientes'
+import Pacientes from '@/services/listarPacientes'
 
 export default {
     name: 'PacientePage',
@@ -53,10 +84,10 @@ export default {
     data() {
         return {
             estados: [],
-            pacientes,
+            pacientes: [],
             nome: null,
             cpf: null,
-            dataNasc: null,
+            dataNascimento: null,
             peso: null,
             altura: null,
             estado_nome: "Acre"
@@ -68,12 +99,13 @@ export default {
             let paciente = {};
             paciente.nome = this.nome;
             paciente.cpf = this.cpf;
-            paciente.dataNasc = this.dataNasc;
+            paciente.dataNascimento = this.dataNascimento;
             paciente.peso = this.peso;
             paciente.altura = this.altura;
-            paciente.estado = this.estado_nome;
-            if(this.validar(paciente)){
-            alert("dados validados")
+            paciente.uf = this.estado_nome;
+            if (this.validar(paciente)) {
+                alert("dados validados")
+                this.enviar(paciente)
             }
         },
         validar(paciente) {
@@ -82,7 +114,7 @@ export default {
                 msg += "informe o nome \n";
             if (paciente.cpf == "" || paciente.cpf == " " || paciente.cpf == null)
                 msg += "informe o cpf \n";
-            if (paciente.estado == "" || paciente.estado == " " || paciente.estado == null)
+            if (paciente.uf == "" || paciente.uf == " " || paciente.uf == null)
                 msg += "informe o estado \n";
             if (paciente.altura < 0)
                 msg += "altura invalida \n";
@@ -94,40 +126,117 @@ export default {
             }
             return true;
         },
-        limpar(){
-            this.nome= null,
-            this.cpf=null,
-           this.dataNasc= null,
-            this.peso= null,
-            this.altura= null,
-           this.estado_nome= "Acre"
+        limpar() {
+            this.nome = null,
+                this.cpf = null,
+                this.dataNascimento = null,
+                this.peso = null,
+                this.altura = null,
+                this.uf = "Acre"
         },
-        enviar(paciente){
-            pacientes.enviar(paciente)
+        enviar(paciente) {
+            this.limpar()
+            Pacientes.salvar(paciente)
+
         }
 
     },
     mounted() {
         Estados.listar().then((resposta) => {
-            console.log(resposta.data);
             this.estados = resposta.data;
         });
+        Pacientes.listar().then((resposta) => {
+            console.log(resposta.data)
+            this.pacientes = resposta.data;
+        }
+        )
     }
 }
 </script>
 <style scoped>
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+table thead {
+    height: 55px;
+    font-size: 16 px;
+    color: #e9e9e9;
+    font-weight: 700;
+    background-color: #1ab2ff;
+}
+
+table tbody {
+    font-size: 18px;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+    background-color: #1ab2ff;
+}
+
+table tbody tr {
+    height: 74px;
+    border-top: 1px solid #5f6e82;
+}
+
+tr:hover>td {
+    background-color: #384459;
+}
+
+table tbody tr:nth-child(odd) {
+    background-color: #73a4bdad;
+}
+
 .inicais {
+    margin-top: 5%;
     display: inline-block;
     background: #fff;
     box-shadow: 0px 0px 3px black, 0 3px 3px rgba(0, 0, 0, 0.22);
     border-radius: 2px;
-    width: 40%;
-    margin-left: 7%;
+    width: 42%;
+    margin-left: 5%;
+    justify-content: center;
+    align-items: center;
+}
+
+.outros{
+    margin-top: 5%;
+    display: inline-block;
+    background: #fff;
+    box-shadow: 0px 0px 3px black, 0 3px 3px rgba(0, 0, 0, 0.22);
+    border-radius: 2px;
+    width: 42%;
+    margin-left: 5%;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.tabela {
+
+    background: #fff;
+    box-shadow: 0px 0px 3px black, 0 3px 3px rgba(0, 0, 0, 0.22);
+    width: 80%;
+    margin-left: 10%;
     margin-top: 5%;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
 
+.inserir {
+    display: inline-block;
+    width: 46%;
+    margin-left: 1%;
+}
+
+.limpar {
+    display: inline-block;
+    width: 46%;
+    margin-left: 1%;
 }
 
 select {
@@ -137,28 +246,8 @@ select {
     width: 100%;
 }
 
-.outras {
-    display: inline-block;
-    background: #fff;
-    box-shadow: 0px 0px 3px black, 0 3px 3px rgba(0, 0, 0, 0.22);
-    border-radius: 2px;
-    width: 40%;
-    margin-left: 7%;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.form {
-
-    padding: 50px 30px;
-    -webkit-transition: -webkit-transform 1.2s ease-in-out;
-    transition: -webkit-transform 1.2s ease-in-out;
-    transition: transform 1.2s ease-in-out;
-    transition: transform 1.2s ease-in-out, -webkit-transform 1.2s ease-in-out;
-}
-
-input,button {
+input,
+button {
     border: none;
     outline: none;
     background: none;
@@ -190,15 +279,13 @@ select {
     font-family: 'Nunito', sans-serif;
 }
 
-button{
-        display: block;
-        margin: 20px  auto;
-        width: 260px;
-        height: 36px;
-        border-radius: 30px;
-        background-color: #8c8c8c;
-        color: white;
-        font-size: 15px;
-        cursor: pointer;
-    }
+button {
+    margin: 20px auto;
+    width: 260px;
+    height: 36px;
+    border-radius: 30px;
+    background-color: #8c8c8c;
+    color: white;
+    font-size: 15px;
+}
 </style>

@@ -4,7 +4,7 @@ export default{
     listar:() =>{
         return https.get('pacientes')
     },
-    enviar:()=>{
-        return https.post('pacientes')
+    salvar:(pacientes)=>{
+        return https.post('pacientes',pacientes)
     }
 }

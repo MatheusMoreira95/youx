@@ -1,5 +1,6 @@
 package com.example.Youx.entities;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -14,7 +15,7 @@ public class Pacientes implements Serializable {
     @Id
     private String cpf;
     private String nome;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "GMT-3")
+    @JsonFormat(pattern="dd-MM-yyyy")
     private Date dataNascimento;
     private Double peso;
     private Double Altura;

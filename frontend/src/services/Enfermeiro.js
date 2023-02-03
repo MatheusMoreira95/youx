@@ -4,7 +4,7 @@ export default{
     listar:() =>{
         return https.get('enfermeiro')
     },
-    salvar:(pacientes)=>{
-        return https.post('pacientes',pacientes)
+    salvar:(enfermeiro)=>{
+        return https.post('enfermeiro',enfermeiro)
     }
 }

@@ -3,6 +3,7 @@ import Router from 'vue-router';
 // Home
 import Inicio from '@/pages/Home/Inicio' 
 import Pacientes from '@/pages/Cadastro/Pacientes' 
+import Enfermeiros from '@/pages/Cadastro/Enfermeiro' 
 Vue.use(Router);
 
 export default new Router({
@@ -18,5 +19,15 @@ export default new Router({
         meta: {
             routeTitle: 'Cadastro de Pacientes'
         }
-    }]
+    },{
+        path: '/enfermeiros',
+        component: Enfermeiros,
+        meta: {
+            routeTitle: 'Cadastro de Enfermeiros'
+        }
+    }
+    
+
+,
+]
 })

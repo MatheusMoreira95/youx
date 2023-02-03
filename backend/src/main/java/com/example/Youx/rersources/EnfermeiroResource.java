@@ -22,14 +22,14 @@ public class EnfermeiroResource {
     EnfermeiroService services;
     CriptografiaCPF criptografiaCPF = new CriptografiaCPF();
 
-    @PreAuthorize("hasAnyAuthority('PERMISSAO_ADM' ,'PERMISSAO_MEDICO')")
+    //@PreAuthorize("hasAnyAuthority('PERMISSAO_ADM' ,'PERMISSAO_MEDICO')")
     @GetMapping(value = "/{cpf}")
     public ResponseEntity<EnfermeiroVo> findById(@PathVariable String cpf) {
         EnfermeiroVo obj = services.findById(cpf);
         return ResponseEntity.ok().body(obj);
     }
 
-    @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO','PERMISSAO_ADM' )")
+   // @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO','PERMISSAO_ADM' )")
     @GetMapping
     public ResponseEntity<List<EnfermeiroVo>> findAll() {
         List<EnfermeiroVo> list = services.findAll();
@@ -38,7 +38,7 @@ public class EnfermeiroResource {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO')")
+  //  @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO')")
     @PostMapping
     public ResponseEntity<EnfermeiroVo> insert(@RequestBody EnfermeiroVo obj) throws ValidationException {
         try {

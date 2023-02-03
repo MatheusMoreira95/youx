@@ -8,7 +8,8 @@
         </label>
         <label>
           <span>CPF:</span>
-          <input v-model="cpf" type="text" class="form-control cpf-mask" placeholder="Ex.: 000.000.000-00" />
+          <input v-model="cpf" v-mask="'###.###.###-##'" type="text" class="form-control cpf-mask"
+            placeholder="Informe o CPF" />
         </label>
         <label>
           <span>Data de Nascimento:</span>
@@ -61,8 +62,9 @@
                 <input class="pesquisa" v-model="pesquisar" placeholder="Pesquisar Nome" />
               </template>
               <template slot-scope="scope">
-                <el-button size="medium" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-                <el-button size="medium" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+                <el-button type="primary" icon="el-icon-edit" circle
+                  @click="handleEdit(scope.$index, scope.row)"></el-button>
+                <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"></el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -88,9 +90,9 @@ export default {
       dataNascimento: null,
       peso: null,
       altura: null,
-      pesquisar:'',
+      pesquisar: '',
       estado_nome: "Acre",
-   
+
     };
   },
   methods: {
@@ -135,6 +137,13 @@ export default {
       this.limpar();
       Pacientes.salvar(paciente);
     },
+    handleEdit(index, row) {
+      console.log(index, row);
+    },
+    handleDelete(row) {
+      Pacientes.deletar(row.cpf);
+    }
+
   },
   mounted() {
     Estados.listar().then((resposta) => {
@@ -157,12 +166,15 @@ export default {
   margin-right: auto;
   margin-top: 50px;
 }
-.tb_pacientes{
+
+.tb_pacientes {
   font-size: 17px;
 }
-.pesquisa{
+
+.pesquisa {
   width: 200px;
 }
+
 .inicais {
   margin-top: 5%;
   display: inline-block;
@@ -174,6 +186,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .outros {
   margin-top: 5%;
   display: inline-block;
@@ -185,28 +198,33 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .inserir {
   display: inline-block;
   width: 46%;
   margin-left: 1%;
 }
+
 select {
   text-align: center;
   flex: 1;
   margin-right: 5px;
   width: 100%;
 }
+
 input {
   border: none;
   outline: none;
   background: none;
 }
+
 label span {
   font-size: 14px;
   font-weight: 600;
   color: #505f75;
   text-transform: uppercase;
 }
+
 label {
   display: block;
   width: 260px;
@@ -214,6 +232,7 @@ label {
   text-align: center;
   padding: 10px;
 }
+
 input,
 select {
   display: block;

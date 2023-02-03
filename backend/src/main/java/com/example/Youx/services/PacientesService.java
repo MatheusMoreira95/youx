@@ -5,9 +5,13 @@ import com.example.Youx.data.vo.security.CriptografiaCPF;
 import com.example.Youx.entities.Pacientes;
 import com.example.Youx.mapper.DozerMapper;
 import com.example.Youx.repositories.PacientesRepository;
+import com.example.Youx.services.exceptions.DatabaseException;
 import com.example.Youx.services.exceptions.ResourceNotFoundException;
 import com.example.Youx.services.exceptions.ResourceUnprocessableException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.ValidationException;
@@ -56,6 +60,42 @@ public class PacientesService {
 
         }
     }
+
+    public PacientesVo update(String cpf , PacientesVo obj){
+        String cpf_cripto = criptografiaCPF.criptografar(cpf);
+        try {
+            Pacientes entity = repository.getReferenceById(cpf_cripto);
+            var obj2 = DozerMapper.parseObject(obj, Pacientes.class);
+            updata(entity,obj2);
+            var vo = DozerMapper.parseObject(repository.save(entity), PacientesVo.class);
+            return vo;
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(cpf);
+        }
+    }
+
+    private void updata(Pacientes entity, Pacientes obj) {
+        entity.setAltura(obj.getAltura());
+        entity.setNome(obj.getNome());
+        entity.setPeso(obj.getPeso());
+        entity.setUF(obj.getUF());
+        entity.setDataNascimento(obj.getDataNascimento());
+    }
+
+
+
+
+    public void delete(String cpf){
+        String cpf_cripto = criptografiaCPF.criptografar(cpf);
+        try {
+            repository.deleteById(cpf_cripto);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(cpf_cripto);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
 
     public Boolean verificarCpf(String cpf) {
         //verifica direto no repository se existe o registro

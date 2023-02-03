@@ -76,7 +76,6 @@
 <script>
 import Estados from "@/services/estados";
 import Pacientes from "@/services/listarPacientes";
-
 export default {
   name: "PacientePage",
   components: {},
@@ -93,9 +92,7 @@ export default {
       estado_nome: "Acre",
    
     };
-
   },
-
   methods: {
     inserir() {
       let paciente = {};
@@ -148,7 +145,6 @@ export default {
         const dataInput = new Date(paciente.dataNascimento);
         paciente.dataNascimento = dataInput.toLocaleDateString('pt-BR', { timezone: 'UTC' });
       });
-
       this.pacientes = resposta.data;
     });
   },
@@ -161,7 +157,6 @@ export default {
   margin-right: auto;
   margin-top: 50px;
 }
-
 .tb_pacientes{
   font-size: 17px;
 }
@@ -179,7 +174,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .outros {
   margin-top: 5%;
   display: inline-block;
@@ -191,34 +185,28 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .inserir {
   display: inline-block;
   width: 46%;
   margin-left: 1%;
 }
-
-
 select {
   text-align: center;
   flex: 1;
   margin-right: 5px;
   width: 100%;
 }
-
 input {
   border: none;
   outline: none;
   background: none;
 }
-
 label span {
   font-size: 14px;
   font-weight: 600;
   color: #505f75;
   text-transform: uppercase;
 }
-
 label {
   display: block;
   width: 260px;
@@ -226,7 +214,6 @@ label {
   text-align: center;
   padding: 10px;
 }
-
 input,
 select {
   display: block;

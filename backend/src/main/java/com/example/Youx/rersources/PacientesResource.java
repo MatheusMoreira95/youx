@@ -21,7 +21,7 @@ public class PacientesResource {
     private PacientesService services;
     CriptografiaCPF criptografiaCPF = new CriptografiaCPF();
 
-  // @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO','PERMISSAO_ADM' )")
+    // @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO','PERMISSAO_ADM' )")
     @GetMapping
     public ResponseEntity<List<PacientesVo>> findAll() {
         List<PacientesVo> list = services.findAll();
@@ -38,7 +38,7 @@ public class PacientesResource {
         return ResponseEntity.ok().body(obj);
     }
 
-   // @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO','PERMISSAO_ADM')")
+    // @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO','PERMISSAO_ADM')")
     @PostMapping
     public ResponseEntity<PacientesVo> insert(@RequestBody PacientesVo obj) throws ValidationException {
         try {
@@ -49,6 +49,16 @@ public class PacientesResource {
         }
     }
 
+    @DeleteMapping(value = "/{cpf}")
+    public ResponseEntity<Void> delete(@PathVariable String cpf) {
+        services.delete(cpf);
+        return ResponseEntity.noContent().build();
+    }
 
+    @PutMapping(value ="/{cpf}" )
+    public ResponseEntity<PacientesVo> update(@PathVariable String cpf , @RequestBody PacientesVo obj){
+        obj = services.update(cpf,obj);
+        return ResponseEntity.ok().body(obj);
+    }
 
 }

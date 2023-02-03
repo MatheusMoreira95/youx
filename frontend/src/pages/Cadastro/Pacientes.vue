@@ -4,27 +4,18 @@
       <div class="inicais">
         <label>
           <span>Nome:</span>
-          <input
-            v-model="nome"
-            type="text"
-            placeholder="Informe o nome do paciente"
-          />
+          <input v-model="nome" type="text" placeholder="Informe o nome do paciente" />
         </label>
         <label>
           <span>CPF:</span>
-          <input
-            v-model="cpf"
-            type="text"
-            class="form-control cpf-mask"
-            placeholder="Ex.: 000.000.000-00"
-          />
+          <input v-model="cpf" type="text" class="form-control cpf-mask" placeholder="Ex.: 000.000.000-00" />
         </label>
         <label>
           <span>Data de Nascimento:</span>
           <input v-model="dataNascimento" type="date" />
         </label>
         <label>
-          <button class="inserir" @click="inserir()">Inserir</button>
+          <el-button type="primary" round @click="inserir()">Inserir</el-button>
         </label>
       </div>
       <div class="outros">
@@ -45,31 +36,38 @@
           </select>
         </label>
         <label>
-          <button class="limpar" @click="limpar()">Limpar</button>
+          <el-button type="primary" round @click="limpar()">Limpar</el-button>
         </label>
       </div>
 
       <div class="tabela">
         <template>
-          <el-table :data="pacientes" style="width: 100%">
-            <el-table-column prop="nome" label="Nome" width="180">
+          <el-table class="tb_pacientes" :data="pacientes.filter(data => !pesquisar ||
+          data.nome.toLowerCase().includes(pesquisar.toLowerCase()))" style="width: 100%">
+            <el-table-column label="Nome" prop="nome" width=240px>
             </el-table-column>
-            <el-table-column prop="cpf" label="CPF" width="180">
+            <el-table-column label="CPF" prop="cpf" width=150px>
             </el-table-column>
-            <el-table-column 
-              prop="dataNascimento"
-              label="Data de Nascimento"
-              width="180"
-            >
+            <el-table-column label="Data de Nascimento" prop="dataNascimento" width=190px>
             </el-table-column>
-            <el-table-column prop="peso" label="PESO" width="100">
+            <el-table-column label="Peso" prop="peso" width=100px>
             </el-table-column>
-            <el-table-column prop="altura" label="ALTURA" width="100">
+            <el-table-column label="Altura" prop="altura" width=100px>
             </el-table-column>
-            <el-table-column prop="uf" label="ESTADO" width="180">
+            <el-table-column label="UF" prop="uf" width=150px>
+            </el-table-column>
+            <el-table-column align="right">
+              <template slot="header">
+                <input class="pesquisa" v-model="pesquisar" placeholder="Pesquisar Nome" />
+              </template>
+              <template slot-scope="scope">
+                <el-button size="medium" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+                <el-button size="medium" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+              </template>
             </el-table-column>
           </el-table>
         </template>
+
       </div>
     </form>
   </div>
@@ -91,8 +89,11 @@ export default {
       dataNascimento: null,
       peso: null,
       altura: null,
+      pesquisar:'',
       estado_nome: "Acre",
+   
     };
+
   },
 
   methods: {
@@ -145,9 +146,9 @@ export default {
     Pacientes.listar().then((resposta) => {
       resposta.data.map(paciente => {
         const dataInput = new Date(paciente.dataNascimento);
-        paciente.dataNascimento = dataInput.toLocaleDateString('pt-BR', {timezone: 'UTC'});
+        paciente.dataNascimento = dataInput.toLocaleDateString('pt-BR', { timezone: 'UTC' });
       });
-      
+
       this.pacientes = resposta.data;
     });
   },
@@ -155,10 +156,17 @@ export default {
 </script>
 <style scoped>
 .tabela {
-     width:  80%;
-    margin-left: auto;
-    margin-right: auto; 
-    margin-top: 25px ;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+}
+
+.tb_pacientes{
+  font-size: 17px;
+}
+.pesquisa{
+  width: 200px;
 }
 .inicais {
   margin-top: 5%;
@@ -184,21 +192,12 @@ export default {
   align-items: center;
 }
 
-el-table {
-  margin-left: 5%;
-}
-
 .inserir {
   display: inline-block;
   width: 46%;
   margin-left: 1%;
 }
 
-.limpar {
-  display: inline-block;
-  width: 46%;
-  margin-left: 1%;
-}
 
 select {
   text-align: center;
@@ -207,8 +206,7 @@ select {
   width: 100%;
 }
 
-input,
-button {
+input {
   border: none;
   outline: none;
   background: none;
@@ -238,15 +236,5 @@ select {
   border-bottom: 1px solid rgba(109, 93, 93, 0.4);
   text-align: center;
   font-family: "Nunito", sans-serif;
-}
-
-button {
-  margin: 20px auto;
-  width: 260px;
-  height: 36px;
-  border-radius: 30px;
-  background-color: #8c8c8c;
-  color: white;
-  font-size: 15px;
 }
 </style>

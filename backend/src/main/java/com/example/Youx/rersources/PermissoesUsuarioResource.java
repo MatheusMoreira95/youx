@@ -16,14 +16,14 @@ public class PermissoesUsuarioResource {
     @Autowired
     PermissoesUsuariosService permissoesUsuariosService;
 
-    @PreAuthorize("hasAuthority('PERMISSAO_MEDICO')")
+    //@PreAuthorize("hasAuthority('PERMISSAO_MEDICO')")
     @PostMapping
     public ResponseEntity<PermissoesUsuario> save(@RequestBody PermissoesUsuario permissoesUsuario) {
         permissoesUsuariosService.inserir(permissoesUsuario);
         return ResponseEntity.ok().body(permissoesUsuario);
     }
 
-    @PreAuthorize("hasAuthority('PERMISSAO_MEDICO')")
+    //@PreAuthorize("hasAuthority('PERMISSAO_MEDICO')")
     @GetMapping
     public ResponseEntity<List<PermissoesUsuario>> findAll() {
         List<PermissoesUsuario> list = permissoesUsuariosService.findAll();

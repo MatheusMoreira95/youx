@@ -1,6 +1,7 @@
 package com.example.Youx.services;
 
 import com.example.Youx.data.vo.PacientesVo;
+import com.example.Youx.data.vo.PermissoesUsuario;
 import com.example.Youx.data.vo.security.CriptografiaCPF;
 import com.example.Youx.entities.Pacientes;
 import com.example.Youx.mapper.DozerMapper;
@@ -12,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.ValidationException;

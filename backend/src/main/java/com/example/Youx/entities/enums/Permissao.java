@@ -1,8 +1,6 @@
 package com.example.Youx.entities.enums;
 
 public enum Permissao {
-    PERMISSAO_ADM,
-    PERMISSAO_USER,
-
+    PERMISSAO_ENFERMEIRO,
     PERMISSAO_MEDICO;
 }

@@ -1,77 +1,45 @@
 <template>
-  <div class="menu">
-    <form class="pacientes">
-      <div class="inicais">
-        <label>
-          <span>Nome:</span>
-          <input v-model="nome" type="text" placeholder="Informe o nome do paciente" />
-        </label>
-        <label>
-          <span>CPF:</span>
-          <input v-model="cpf" v-mask="'###.###.###-##'" type="text" class="form-control cpf-mask"
-            placeholder="Informe o CPF" />
-        </label>
-        <label>
-          <span>Data de Nascimento:</span>
-          <input v-model="dataNascimento" type="date" />
-        </label>
-        <label>
-          <el-button type="primary" round @click="inserir()">Inserir</el-button>
-        </label>
-      </div>
-      <div class="outros">
-        <label>
-          <span>Peso:</span>
-          <input v-model="peso" type="number" min="0" max="300" step=".01" />
-        </label>
-        <label>
-          <span>Altura:</span>
-          <input v-model="altura" type="number" min="0" max="3" step=".01" />
-        </label>
-        <label>
-          <span>Estado:</span>
-          <select id="estados" v-model="estado_nome">
-            <option v-for="estado of estados" :key="estado.id">
-              {{ estado.nome }}
-            </option>
-          </select>
-        </label>
-        <label>
-          <el-button type="primary" round @click="limpar()">Limpar</el-button>
-        </label>
-      </div>
-
-      <div class="tabela">
-        <template>
-          <el-table class="tb_pacientes" :data="pacientes.filter(data => !pesquisar ||
-          data.nome.toLowerCase().includes(pesquisar.toLowerCase()))" style="width: 100%">
-            <el-table-column label="Nome" prop="nome" width=240px>
-            </el-table-column>
-            <el-table-column label="CPF" prop="cpf" width=150px>
-            </el-table-column>
-            <el-table-column label="Data de Nascimento" prop="dataNascimento" width=190px>
-            </el-table-column>
-            <el-table-column label="Peso" prop="peso" width=100px>
-            </el-table-column>
-            <el-table-column label="Altura" prop="altura" width=100px>
-            </el-table-column>
-            <el-table-column label="UF" prop="uf" width=150px>
-            </el-table-column>
-            <el-table-column align="right">
-              <template slot="header">
-                <input class="pesquisa" v-model="pesquisar" placeholder="Pesquisar Nome" />
-              </template>
-              <template slot-scope="scope">
-                <el-button type="primary" icon="el-icon-edit" circle
-                  @click="handleEdit(scope.$index, scope.row)"></el-button>
-                <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"></el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </template>
-
-      </div>
-    </form>
+  <div class="container">
+    <label>
+      <span>Nome:</span>
+      <el-input v-model="nome" type="text" placeholder="Informe o nome do paciente" />
+    </label>
+    <label>
+      <span>CPF:</span>
+      <el-input v-model="cpf" v-mask="'###.###.###-##'" type="text" class="form-control cpf-mask"
+        placeholder="Informe o CPF" />
+    </label>
+    <label>
+      <span>Data de Nascimento:</span>
+      <el-input v-model="dataNascimento" type="date" />
+    </label>
+    <label>
+      <span>Peso:</span>
+      <el-input v-model="peso" type="number" min="0" max="300" step=".01" />
+    </label>
+    <label>
+      <span>Altura:</span>
+      <el-input v-model="altura" type="number" min="0" max="3" step=".01" />
+    </label>
+    <label>
+      <span>Estado:</span>
+      <select id="estados" v-model="estado_nome">
+        <option v-for="estado of estados" :key="estado.id">
+          {{ estado.nome }}
+        </option>
+      </select>
+    </label>
+    <div class="botao">
+      <label>
+        <el-button v-if="ativo" loadingdisabled type="primary" plain @click="inserir()">Salvar</el-button>
+      </label>
+      <label>
+        <el-button v-if="atualizar" loadingdisabled type="primary" plain @click="atualiza()">Atualizar</el-button>
+      </label>
+      <label>
+        <el-button type="primary" plain @click="limpar()">Limpar</el-button>
+      </label>
+    </div>
   </div>
 </template>
 
@@ -90,8 +58,9 @@ export default {
       dataNascimento: null,
       peso: null,
       altura: null,
-      pesquisar: '',
       estado_nome: "Acre",
+      ativo: true,
+      atualizar: false
 
     };
   },
@@ -105,9 +74,24 @@ export default {
       paciente.altura = this.altura;
       paciente.uf = this.estado_nome;
       if (this.validar(paciente)) {
-        alert("dados validados");
         this.enviar(paciente);
       }
+    },
+    atualiza() {
+      let paciente = {};
+      paciente.nome = this.nome;
+      paciente.cpf = this.cpf;
+      paciente.dataNascimento = this.dataNascimento;
+      paciente.peso = this.peso;
+      paciente.altura = this.altura;
+      paciente.uf = this.estado_nome;
+      if (this.validar(paciente)) {
+        this.atualiza_paciente(paciente);
+      }
+    },
+    atualiza_paciente(paciente) {
+      this.limpar();
+      Pacientes.atualizar(paciente, paciente.cpf);
     },
     validar(paciente) {
       let msg = "";
@@ -136,12 +120,6 @@ export default {
     enviar(paciente) {
       this.limpar();
       Pacientes.salvar(paciente);
-    },
-    handleEdit(index, row) {
-      console.log(index, row);
-    },
-    handleDelete(row) {
-      Pacientes.deletar(row.cpf);
     }
 
   },
@@ -149,54 +127,33 @@ export default {
     Estados.listar().then((resposta) => {
       this.estados = resposta.data;
     });
-    Pacientes.listar().then((resposta) => {
-      resposta.data.map(paciente => {
-        const dataInput = new Date(paciente.dataNascimento);
-        paciente.dataNascimento = dataInput.toLocaleDateString('pt-BR', { timezone: 'UTC' });
-      });
-      this.pacientes = resposta.data;
-    });
+
+
+    if (this.$route.params) {
+      let r_paciente = this.$route.params
+      if (r_paciente.cpf != null) {
+        this.ativo = false;
+      this.atualizar = true;
+        let parts_of_date = r_paciente.data.split("/");
+        let output = new Date(+parts_of_date[2], parts_of_date[1] - 1, +parts_of_date[0]).toISOString().substring(0, 10)
+        this.nome = r_paciente.nome,
+          this.cpf = r_paciente.cpf,
+          console.log('data', output),
+          this.dataNascimento = output,
+          this.peso = r_paciente.peso,
+          this.altura = r_paciente.altura,
+          this.estado_nome = r_paciente.uf
+        this.disabled = true
+      }
+    }
+
   },
 };
 </script>
 <style scoped>
-.tabela {
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 50px;
-}
-
-.tb_pacientes {
-  font-size: 17px;
-}
-
-.pesquisa {
-  width: 200px;
-}
-
-.inicais {
-  margin-top: 5%;
-  display: inline-block;
-  background: #fff;
-  box-shadow: 0px 0px 3px black, 0 3px 3px rgba(0, 0, 0, 0.22);
-  border-radius: 2px;
-  width: 42%;
-  margin-left: 5%;
-  justify-content: center;
-  align-items: center;
-}
-
-.outros {
-  margin-top: 5%;
-  display: inline-block;
-  background: #fff;
-  box-shadow: 0px 0px 3px black, 0 3px 3px rgba(0, 0, 0, 0.22);
-  border-radius: 2px;
-  width: 42%;
-  margin-left: 5%;
-  justify-content: center;
-  align-items: center;
+* {
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
 }
 
 .inserir {
@@ -205,17 +162,29 @@ export default {
   margin-left: 1%;
 }
 
-select {
-  text-align: center;
-  flex: 1;
-  margin-right: 5px;
-  width: 100%;
+.el-input {
+  margin: 5px;
 }
 
-input {
-  border: none;
-  outline: none;
-  background: none;
+.botao {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.botao button {
+  margin: 30px;
+}
+
+.container {
+  padding: 50px;
+}
+
+label {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  text-align: center;
 }
 
 label span {
@@ -225,22 +194,12 @@ label span {
   text-transform: uppercase;
 }
 
-label {
-  display: block;
-  width: 260px;
-  margin: 25px auto 0;
-  text-align: center;
-  padding: 10px;
-}
-
-input,
 select {
-  display: block;
   width: 100%;
-  margin-top: 5px;
-  font-size: 16px;
-  border-bottom: 1px solid rgba(109, 93, 93, 0.4);
+  font-size: 18px;
+  font-weight: 600;
+  color: #505f75;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   text-align: center;
-  font-family: "Nunito", sans-serif;
 }
 </style>

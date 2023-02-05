@@ -2,9 +2,15 @@ package com.example.Youx.rersources;
 
 
 import com.example.Youx.data.vo.EnfermeiroVo;
+import com.example.Youx.data.vo.PacientesVo;
 import com.example.Youx.data.vo.security.CriptografiaCPF;
+import com.example.Youx.entities.Enfermeiro;
+import com.example.Youx.entities.Pacientes;
+import com.example.Youx.mapper.DozerMapper;
 import com.example.Youx.services.EnfermeiroService;
 import com.example.Youx.services.exceptions.DatabaseException;
+import com.example.Youx.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +35,7 @@ public class EnfermeiroResource {
         return ResponseEntity.ok().body(obj);
     }
 
-   // @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO','PERMISSAO_ADM' )")
+    // @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO','PERMISSAO_ADM' )")
     @GetMapping
     public ResponseEntity<List<EnfermeiroVo>> findAll() {
         List<EnfermeiroVo> list = services.findAll();
@@ -38,7 +44,7 @@ public class EnfermeiroResource {
     }
 
 
-  //  @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO')")
+    //  @PreAuthorize("hasAnyAuthority('PERMISSAO_MEDICO')")
     @PostMapping
     public ResponseEntity<EnfermeiroVo> insert(@RequestBody EnfermeiroVo obj) throws ValidationException {
         try {
@@ -48,6 +54,15 @@ public class EnfermeiroResource {
             throw new DatabaseException(e.getMessage());
         }
     }
-
+    @DeleteMapping(value = "/{cpf}")
+    public ResponseEntity<Void> delete(@PathVariable String cpf) {
+        services.delete(cpf);
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping(value ="/{cpf}" )
+    public ResponseEntity<EnfermeiroVo> update(@PathVariable String cpf , @RequestBody EnfermeiroVo obj){
+        obj = services.update(cpf,obj);
+        return ResponseEntity.ok().body(obj);
+    }
 
 }

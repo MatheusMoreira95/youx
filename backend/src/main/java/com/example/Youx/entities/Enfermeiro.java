@@ -1,13 +1,16 @@
 package com.example.Youx.entities;
 
+import com.example.Youx.entities.enums.Permissao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+
 
 
 @Entity
@@ -110,6 +113,5 @@ public class Enfermeiro implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 
 }

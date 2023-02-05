@@ -6,20 +6,21 @@
                 <h3>Bem Vindo</h3>
                 <label>
                     <span>Login:</span>
-                    <input v-model="login" placeholder="insira seu usuário">
+                    <input v-model="model.nome" placeholder="insira seu usuário">
                 </label>
                 <label>
                     <span>Senha:</span>
-                    <input v-model="password" type="password" placeholder="insira sua senha">
+                    <input v-model="model.senha" type="password" placeholder="insira sua senha">
                 </label>
-                <button class="subimit" type="button">Entrar</button>
+                <button class="subimit" @click="entrar()" type="button">Entrar</button>
             </form>
         </div>
     </div>
 </template>
 
 <script>
-import pacientes from '@/services/listarPacientes'
+import Enfermeiro from '@/services/Enfermeiro';
+import verificaAutenticacao  from '@/auth/auth'
 
 export default {
     name: 'InicioPage',
@@ -28,15 +29,26 @@ export default {
     },
     data() {
         return {
-            login: null,
-            password: null,
-            pacientes: []
+            model: {
+                nome: null,
+                senha: null
+            }
+        }
+    },
+    methods: {
+        entrar() {
+            Enfermeiro.logar(this.model)
+            localStorage.setItem('usuario', JSON.stringify(this.model));
         }
     },
     mounted() {
-        pacientes.listar().then((resposta) => {
-            this.pacientes = resposta.data;
-        });
+        verificaAutenticacao();
+       
+    //    if (usuario) {
+    //      this.$router.push({
+    //         name: 'pacientes_listar'
+    //      })
+    //    }
     }
 }
 

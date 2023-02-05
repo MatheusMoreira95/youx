@@ -21,7 +21,7 @@ public class Pacientes implements Serializable {
     private String cpf;
     private String nome;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dataNascimento;

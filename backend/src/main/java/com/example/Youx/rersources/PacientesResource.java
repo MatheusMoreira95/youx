@@ -2,6 +2,7 @@ package com.example.Youx.rersources;
 
 import com.example.Youx.data.vo.PacientesVo;
 import com.example.Youx.data.vo.security.CriptografiaCPF;
+import com.example.Youx.entities.Pacientes;
 import com.example.Youx.services.PacientesService;
 import com.example.Youx.services.exceptions.DatabaseException;
 import org.springframework.beans.factory.annotation.Autowired;

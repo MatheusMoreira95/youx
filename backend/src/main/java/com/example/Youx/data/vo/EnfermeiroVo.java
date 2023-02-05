@@ -1,6 +1,8 @@
 package com.example.Youx.data.vo;
 
 
+import com.example.Youx.entities.enums.Permissao;
+
 public class EnfermeiroVo {
 
     private String cpf;

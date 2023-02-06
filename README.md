@@ -19,3 +19,6 @@ senha: 123456
 
 Melhorias futuras : 
 Autenticação Auth2 e configuração de usuario no frontend
+
+caso erro no front use 
+npm install --save --legacy-peer-deps

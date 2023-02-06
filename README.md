@@ -16,3 +16,6 @@ insert into permissoes_usuarios(cpf,id_permissao) values ('MTIzLjQ1Ni43ODktOTk='
 
 usuario: medico
 senha: 123456
+
+Melhorias futuras : 
+Autenticação Auth2 e configuração de usuario no frontend

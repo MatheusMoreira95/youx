@@ -22,3 +22,9 @@ Autenticação Auth2 e configuração de usuario no frontend
 
 caso erro no front use 
 npm install --save --legacy-peer-deps
+
+backend usei DOZER para transformar entities em entitiesVO
+JavaSecurity para criar as permissoes
+componente Element UI no frontend para criar tabelas , filtro de pesquisa , botões 
+Vmask frontend para colocar mascara no campo CPF
+Vue Router 
